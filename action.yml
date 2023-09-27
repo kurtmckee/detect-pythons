@@ -1,0 +1,172 @@
+# This file is a part of the detect-pythons project.
+# https://github.com/kurtmckee/detect-pythons
+# Copyright 2023 Kurt McKee <contactme@kurtmckee.org>
+# SPDX-License-Identifier: MIT
+
+author: "Kurt McKee"
+name: "Detect installed Python interpreters"
+description: |
+  Detect installed Python interpreters and output them as "python-identifiers".
+  This can be useful for cache busting of tox, virtual environments,
+  and other items that are sensitive to changes in Python implementations and versions.
+
+  Only Python interpreters named "python" in the $PATH will be found.
+
+inputs:
+  identifiers-filename:
+    description: |
+      A filename to write the ``python-identifiers`` output to.
+      Suitable for use in with the ``hashFiles`` function.
+
+      To prevent any file from being written, use a blank string.
+    required: false
+    default: ".python-identifiers"
+
+outputs:
+  python-identifiers:
+    description: |
+      A string of sorted Python identifiers.
+
+      In most cases the identifiers will be paths,
+      but for system Pythons, 'sysconfig.get_config_var("EXT_SUFFIX")' will be included.
+
+      The string will be separated by OS-specific PATH separators;
+      ":" is used on Linux and macOS, and ";" is used on Windows.
+    value: "${{ steps.final-step.outputs.python-identifiers }}"
+
+runs:
+  using: "composite"
+  steps:
+    - name: "Detect Pythons on Linux / macOS"
+      id: "linux"
+      if: "runner.os != 'windows'"
+      shell: "bash"
+      # Do not edit the 'run' code below.
+      # It is copied from 'detector.sh' by a pre-commit hook.
+      # START: detector.sh
+      run: |
+        python_code=$(
+        cat <<'identify.py_SOURCE_CODE'
+        from __future__ import print_function
+
+        import sysconfig
+
+
+        def main():
+            ext_suffix = sysconfig.get_config_var("EXT_SUFFIX")
+            if ext_suffix is not None:
+                print(ext_suffix)
+            else:
+                # Python 2.7 on GitHub macOS runners
+                import platform
+
+                print(
+                    "." + platform.python_implementation().lower(),
+                    sysconfig.get_config_var("py_version_nodot"),
+                    sysconfig.get_config_var("MACHDEP"),
+                    sep="-",
+                )
+
+
+        if __name__ == "__main__":
+            main()
+        identify.py_SOURCE_CODE
+        )
+
+        # Search paths in $PATH for Python interpreters.
+        IFS=: read -r -a all_paths <<< "$PATH"
+
+        # Detect Python interpreters.
+        paths=()
+        for path in "${all_paths[@]}"; do
+            # Interpreters in RUNNER_TOOL_CACHE have directory names that include:
+            #
+            # * The implementation (like "Python" or "PyPy")
+            # * A version (like "3.10.12")
+            # * The architecture (like "x64")
+            #
+            # In such cases, the path can be used as the identifier.
+            if [[ "${path/#${RUNNER_TOOL_CACHE}/}" != "${path}" ]]; then
+                # Check for bin/python first;
+                # this results in duplicate paths which are later removed.
+                if [[ -x "${path}/bin/python" ]]; then
+                    paths+=("${path}/bin")
+                elif [[ -x "${path}/python" ]]; then
+                    paths+=("${path}")
+                fi
+            else
+                # System Pythons (e.g. /usr/bin/python) have nothing unique in the path.
+                # In such cases, it's necessary to run the executable to get something unique.
+                if [[ -x "${path}/python" ]]; then
+                    paths+=("${path}")
+                    paths+=("$(echo "${python_code}" | "${path}/python" -)")
+                fi
+            fi
+        done
+
+        # Sort the paths, ensure each path is unique, and create the output result.
+        result="$(
+            echo "${paths[*]}" \
+            | tr ' ' '\n' \
+            | sort \
+            | uniq \
+            | tr '\n' ':'
+        )"
+
+        # Trim trailing colons.
+        result="${result%:}"
+
+        # Output path information.
+        # This must be the final line because it will be automatically transformed to:
+        #
+        #     echo "python-identifiers=${result}" > "$GITHUB_OUTPUT"
+        #
+        echo "python-identifiers=${result}" > "$GITHUB_OUTPUT"
+      # END: detector.sh
+
+    - name: "Detect Pythons on Windows"
+      id: "windows"
+      if: "runner.os == 'windows'"
+      shell: "powershell"
+      # Do not edit the 'run' code below.
+      # It is copied from 'detector.ps1' by a pre-commit hook.
+      # START: detector.ps1
+      run: |
+        $all_paths = $env:PATH -split ";"
+
+        # Detect Python interpreters.
+        $paths = @()
+        foreach ($path in $all_paths) {
+            # Only consider paths in RUNNER_TOOL_CACHE.
+            if ($path.StartsWith($env:RUNNER_TOOL_CACHE)) {
+                if (Test-Path "$path\python.exe") {
+                    $paths += $path
+                }
+            }
+        }
+
+        # Sort the paths, ensure each path is unique, and create the output result.
+        $result = (
+            $paths `
+            | Sort-Object `
+            | Get-Unique
+        ) -join ";"
+
+        # Output path information.
+        # This must be the final line because it will be automatically transformed to:
+        #
+        #     Write-Output "python-identifiers=$result" > "$env:GITHUB_OUTPUT"
+        #
+        Write-Output "python-identifiers=$result" > "$env:GITHUB_OUTPUT"
+      # END: detector.ps1
+
+    - name: "Output"
+      id: "final-step"
+      shell: "bash"
+      run: |
+        COMBINED='${{ steps.linux.outputs.python-identifiers }}${{ steps.windows.outputs.python-identifiers }}'
+        echo "python-identifiers=${COMBINED}" > "$GITHUB_OUTPUT"
+        if [ ! -z '${{ inputs.identifiers-filename }}' ]; then
+            echo "Writing Python identifiers to '${{ inputs.identifiers-filename }}'"
+            echo "${COMBINED}" > '${{ inputs.identifiers-filename }}'
+        fi

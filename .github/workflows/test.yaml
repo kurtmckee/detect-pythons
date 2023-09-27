@@ -1,0 +1,37 @@
+name: "🔬 Test"
+
+on:
+  push:
+    branches:
+      - "main"
+
+jobs:
+  test:
+    name: "Test on ${{ matrix.os.name }}"
+
+    strategy:
+      matrix:
+        os:
+          - name: "Linux"
+            runner: "ubuntu-latest"
+          - name: "macOS"
+            runner: "macos-latest"
+          - name: "Windows"
+            runner: "windows-latest"
+      fail-fast: false
+
+    runs-on: "${{ matrix.os.runner }}"
+    steps:
+      - name: "Use it!"
+        id: "detector"
+        uses: "kurtmckee/detect-pythons@main"
+
+      - name: "Print it!"
+        shell: "bash"
+        run: |
+          echo '${{ steps.detector.outputs.python-identifiers }}'
+
+      - name: "Display it!"
+        shell: "bash"
+        run: |
+          cat .python-identifiers
