@@ -16,6 +16,32 @@ requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 
+[tool.coverage.run]
+parallel = true
+branch = true
+source = [
+    "detect_pythons",
+    "tests",
+]
+
+
+[tool.coverage.paths]
+source = [
+    "src",
+    "*/site-packages",
+]
+
+
+[tool.coverage.report]
+skip_covered = true
+fail_under = 19
+
+
+[tool.coverage.html]
+skip_covered = false
+directory = "htmlcov/"
+
+
 [tool.isort]
 profile = "black"
 

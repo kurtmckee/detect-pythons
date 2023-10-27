@@ -55,7 +55,7 @@ runs:
         def main():
             ext_suffix = sysconfig.get_config_var("EXT_SUFFIX")
             if ext_suffix is not None:
-                print(ext_suffix)
+                print(ext_suffix, end="")
             else:
                 # Python 2.7 on GitHub macOS runners
                 import platform
@@ -65,10 +65,11 @@ runs:
                     sysconfig.get_config_var("py_version_nodot"),
                     sysconfig.get_config_var("MACHDEP"),
                     sep="-",
+                    end="",
                 )
 
 
-        if __name__ == "__main__":
+        if __name__ == "__main__":  # pragma: no cover
             main()
         identify.py_SOURCE_CODE
         )
