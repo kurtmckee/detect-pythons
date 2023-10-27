@@ -22,3 +22,17 @@ Please see the fragment files in the `changelog.d directory`_.
 ..  _changelog.d directory: https://github.com/kurtmckee/detect-pythons/tree/main/changelog.d
 
 ..  scriv-insert-here
+
+.. _changelog-1.0.0:
+
+1.0.0 - 2023-10-26
+==================
+
+Initial release
+---------------
+
+*   Support the latest hosted GitHub runners.
+*   Support at least Python 2.7 and Python 3.8+.
+*   Use paths and ``sysconfig.get_config_var("EXT_SUFFIX")``
+    (and, for the system-installed CPython 2.7 on macOS,
+    an ``EXT_SUFFIX``-alike) to construct a cache-busting string.
