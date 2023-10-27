@@ -51,7 +51,7 @@ and tox test environments stored in ``.tox/``.
           pypy3.10
           3.11
 
-    - uses: "kurtmckee/detect-pythons@main"
+    - uses: "kurtmckee/detect-pythons@v1"
 
     - uses: "actions/cache@v3"
       id: "restore-cache"
@@ -95,7 +95,7 @@ by modifying the input variable ``identifiers-filename``:
 
 ..  code-block:: yaml
 
-    - uses: "kurtmckee/detect-pythons@main"
+    - uses: "kurtmckee/detect-pythons@v1"
       with:
         identifiers-filename: "favored_filename.txt"
 
@@ -104,7 +104,7 @@ set ``identifiers-filename`` to an empty string:
 
 ..  code-block:: yaml
 
-    - uses: "kurtmckee/detect-pythons@main"
+    - uses: "kurtmckee/detect-pythons@v1"
       with:
         identifiers-filename: ""
 
