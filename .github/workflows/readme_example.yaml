@@ -47,7 +47,7 @@ jobs:
             pypy3.10
             3.11
 
-      - uses: "kurtmckee/detect-pythons@main"
+      - uses: "kurtmckee/detect-pythons@v1"
 
       - uses: "actions/cache@v3"
         id: "restore-cache"
