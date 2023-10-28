@@ -42,7 +42,7 @@ when caching a Python virtual environment stored in ``.venv/``
 and tox test environments stored in ``.tox/``.
 
 
-..  START_EXAMPLE_YAML_BLOCK
+..  START_README_EXAMPLE_BLOCK
 ..  code-block:: yaml
 
     - uses: "actions/setup-python@v4"
@@ -80,7 +80,7 @@ and tox test environments stored in ``.tox/``.
 
     - name: "Run the test suite against all installed Pythons"
       run: "${{ env.venv-path }}/tox"
-..  END_EXAMPLE_YAML_BLOCK
+..  END_README_EXAMPLE_BLOCK
 
 
 Inputs
