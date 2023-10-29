@@ -15,36 +15,37 @@ DETECTOR_PS1 = (pathlib.Path(__file__).parent / "detector.ps1").resolve()
 ACTION_YML = (pathlib.Path(__file__).parent / "../../action.yml").resolve()
 
 
-def sync(path: pathlib.Path) -> int:
-    # Verify the paths are acceptable.
-    if path != DETECTOR_SH and path != DETECTOR_PS1:
-        print(f"{path} is not an acceptable file path.")
-        return FILES_NOT_MODIFIED
+def main() -> int:
+    # Read the YAML file once and double-assign it.
+    new_yaml = yaml = ACTION_YML.read_text(encoding="utf-8")
 
-    code = path.read_text().strip()
-    # Strip leading comments.
-    while code.startswith("#"):
-        code = code[code.find("\n") + 1 :].lstrip()
+    for path in (DETECTOR_SH, DETECTOR_PS1):
+        code = path.read_text(encoding="utf-8").strip()
+        # Strip leading comments.
+        while code.startswith("#"):
+            code = code[code.find("\n") + 1 :].lstrip()
+        # Redirect final output to GITHUB_OUTPUT.
+        if path is DETECTOR_SH:
+            code += ' > "$GITHUB_OUTPUT"'
+        else:  # path is DETECTOR_PS1
+            code += ' > "$env:GITHUB_OUTPUT"'
 
-    # Redirect outputs to GITHUB_OUTPUT.
-    if path == DETECTOR_SH:
-        code += ' > "$GITHUB_OUTPUT"'
-    else:  # path == DETECTOR_PS1
-        code += ' > "$env:GITHUB_OUTPUT"'
+        # Determine the text boundaries of the source code in 'action.yml'.
+        start_line = f"# START: {path.name}\n"
+        end_line = f"# END: {path.name}"
+        start = new_yaml.find(start_line) + len(start_line)
+        end = new_yaml.rfind("\n", start, new_yaml.find(end_line, start))
+        indent = new_yaml.find("run:", start) - start
 
-    # Determine the text boundaries of the source code in 'action.yml'.
-    yaml = ACTION_YML.read_text()
-    start_line = f"# START: {path.name}\n"
-    end_line = f"# END: {path.name}"
-    start = yaml.find(start_line) + len(start_line)
-    end = yaml.rfind("\n", start, yaml.find(end_line, start))
-    indent = yaml.find("run:", start) - start
+        # Prepare the code for injection.
+        block = textwrap.indent(
+            "run: |\n" + textwrap.indent(code, " " * 2), " " * indent
+        )
 
-    # Prepare the code for injection.
-    block = textwrap.indent("run: |\n" + textwrap.indent(code, " " * 2), " " * indent)
+        # Inject the source code into 'action.yml'.
+        new_yaml = new_yaml[:start] + block + new_yaml[end:]
 
-    # Inject the source code and determine if 'action.yml' needs to be overwritten.
-    new_yaml = yaml[:start] + block + yaml[end:]
+    # Overwrite 'action.yml' if needed.
     if new_yaml != yaml:
         ACTION_YML.write_text(new_yaml, newline="\n")
         return FILES_MODIFIED
@@ -52,17 +53,5 @@ def sync(path: pathlib.Path) -> int:
     return FILES_NOT_MODIFIED
 
 
-def main():
-    if len(sys.argv) < 2:
-        print("The path to 'detector.sh' or 'detector.ps1' must be provided.")
-        sys.exit(FILES_NOT_MODIFIED)
-
-    rc = FILES_NOT_MODIFIED
-    for argument in sys.argv[1:]:
-        rc |= sync(pathlib.Path(argument).resolve())
-
-    sys.exit(rc)
-
-
-if __name__ == "__main__":
-    main()
+if __name__ == "__main__":  # pragma: no cover
+    sys.exit(main())
