@@ -46,6 +46,13 @@ directory = "htmlcov/"
 profile = "black"
 
 
+[tool.pytest.ini_options]
+addopts = "--color=yes"
+filterwarnings = [
+    "error",
+]
+
+
 [tool.scriv]
 version = "literal: pyproject.toml: tool.poetry.version"
 categories = [
