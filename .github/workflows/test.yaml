@@ -42,13 +42,8 @@ jobs:
           allow-prereleases: true
           cache: "pip"
 
-      - name: "Detect Pythons (Linux/macOS)"
-        if: "runner.os != 'Windows'"
-        run: "bash ./src/detect_pythons/detector.sh > .python-identifiers"
-
-      - name: "Detect Pythons (Windows)"
-        if: "runner.os == 'Windows'"
-        run: "& ./src/detect_pythons/detector.ps1 > .python-identifiers"
+      - name: "Detect Pythons"
+        uses: "./"
 
       - name: "Restore cache"
         id: "restore-cache"
