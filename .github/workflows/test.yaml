@@ -51,8 +51,8 @@ jobs:
         with:
           path: |
             .tox/
-            .venv/
-          key: "tox-os=${{ matrix.run.os.id }}-hash=${{ hashFiles('.python-identifiers', 'tox.ini') }}"
+            .venv
+          key: "tox-os=${{ matrix.os.runner }}-hash=${{ hashFiles('.python-identifiers', 'tox.ini') }}"
 
       - name: "Identify .venv path"
         shell: "bash"
