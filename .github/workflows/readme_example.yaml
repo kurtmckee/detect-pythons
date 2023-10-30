@@ -26,7 +26,7 @@ on:
 
 jobs:
   readme_example:
-    name: "Test README code (${{ matrix.os.name }})"
+    name: "Verify (${{ matrix.os.name }})"
     strategy:
       matrix:
         os:
