@@ -29,3 +29,5 @@ def test_main_ext_suffix_fallback(capsys, monkeypatch):
     assert implementation in stdout
     assert version in stdout
     assert stdout == stdout.strip()
+
+    assert "none" not in stdout.lower()
