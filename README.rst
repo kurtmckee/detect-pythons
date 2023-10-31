@@ -48,6 +48,7 @@ and tox test environments stored in ``.tox/``.
     - uses: "actions/setup-python@v4"
       with:
         python-version: |
+          graalpy-23.0
           pypy3.10
           3.11
 
