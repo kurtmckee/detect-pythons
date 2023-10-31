@@ -57,13 +57,19 @@ runs:
             if ext_suffix is not None:
                 print(ext_suffix, end="")
             else:
-                # Python 2.7 on GitHub macOS runners
+                # Python 2.7 is still pre-installed on GitHub macOS runners.
                 import platform
 
+                implementation = platform.python_implementation().lower()
+                implementation_version = "".join(platform.python_version_tuple()[:2])
+                platform_system = platform.system().lower()
+                platform_machine = platform.machine().lower()
+
                 print(
-                    "." + platform.python_implementation().lower(),
-                    sysconfig.get_config_var("py_version_nodot"),
-                    sysconfig.get_config_var("MACHDEP"),
+                    "." + implementation,
+                    implementation_version,
+                    platform_system,
+                    platform_machine,
                     sep="-",
                     end="",
                 )
