@@ -172,4 +172,4 @@ It doesn't have an ``EXT_SUFFIX`` config value, so this action constructs one.
 ..  csv-table::
     :header: "Platform", "Constructed ``EXT_SUFFIX`` equivalent"
 
-    "macOS", "``.cpython-27-darwin``"
+    "macOS", "``.cpython-27-darwin-x86_64``"
