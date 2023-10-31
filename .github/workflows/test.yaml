@@ -42,13 +42,8 @@ jobs:
           allow-prereleases: true
           cache: "pip"
 
-      - name: "Detect Pythons (Linux/macOS)"
-        if: "runner.os != 'Windows'"
-        run: "bash ./src/detect_pythons/detector.sh > .python-identifiers"
-
-      - name: "Detect Pythons (Windows)"
-        if: "runner.os == 'Windows'"
-        run: "& ./src/detect_pythons/detector.ps1 > .python-identifiers"
+      - name: "Detect Pythons"
+        uses: "./"
 
       - name: "Restore cache"
         id: "restore-cache"
@@ -56,8 +51,8 @@ jobs:
         with:
           path: |
             .tox/
-            .venv/
-          key: "tox-os=${{ matrix.run.os.id }}-hash=${{ hashFiles('.python-identifiers', 'tox.ini') }}"
+            .venv
+          key: "tox-os=${{ matrix.os.runner }}-hash=${{ hashFiles('.python-identifiers', 'tox.ini') }}"
 
       - name: "Identify .venv path"
         shell: "bash"
@@ -72,3 +67,60 @@ jobs:
 
       - name: "Run the test suite"
         run: "${{ env.venv-path }}/tox"
+
+  inputs:
+    name: "Inputs (${{ matrix.os.name }})"
+
+    strategy:
+      matrix:
+        os:
+          - name: "Linux"
+            runner: "ubuntu-latest"
+          - name: "macOS"
+            runner: "macos-latest"
+          - name: "Windows"
+            runner: "windows-latest"
+      fail-fast: false
+
+    runs-on: "${{ matrix.os.runner }}"
+    steps:
+      - name: "Checkout the repository"
+        uses: "actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11" # v4.1.1
+
+      - name: "Test: Disable output file"
+        uses: "./"
+        with:
+          identifiers-filename: ""
+
+      - name: "Verify: Disable output file"
+        shell: "bash"
+        run: |
+          if [[ -e .python-identifiers ]]; then
+            exit 1
+          fi
+
+      - name: "Test: Default output filename"
+        uses: "./"
+
+      - name: "Verify: Default output filename"
+        shell: "bash"
+        run: |
+          if [[ ! -e .python-identifiers ]]; then
+            exit 1
+          else
+            rm ".python-identifiers"
+          fi
+
+      - name: "Test: Custom output filename"
+        uses: "./"
+        with:
+          identifiers-filename: "favored-filename.txt"
+
+      - name: "Verify: Custom output filename"
+        shell: "bash"
+        run: |
+          if [[ ! -e "favored-filename.txt" ]]; then
+            exit 1
+          else
+            rm "favored-filename.txt"
+          fi
