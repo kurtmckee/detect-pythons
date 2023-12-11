@@ -69,3 +69,15 @@ fragment_directory = "changelog.d"
 insert_marker = "scriv-insert-here"
 main_branches = ["main", "releases"]
 new_fragment_template = "file: fragment-template.rst.txt"
+
+
+[tool.chipshot]
+template = """
+This file is a part of the detect-pythons project.
+https://github.com/kurtmckee/detect-pythons
+Copyright 2023 Kurt McKee <contactme@kurtmckee.org>
+SPDX-License-Identifier: MIT
+"""
+exclusions = [
+    "changelog.d/",
+]
