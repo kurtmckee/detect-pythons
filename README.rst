@@ -46,7 +46,7 @@ and tox test environments stored in ``.tox/``.
 ..  START_README_EXAMPLE_BLOCK
 ..  code-block:: yaml
 
-    - uses: "actions/setup-python@v4"
+    - uses: "actions/setup-python@v5"
       with:
         python-version: |
           pypy3.10
