@@ -34,8 +34,10 @@ jobs:
             runner: "ubuntu-latest"
           - name: "macOS"
             runner: "macos-latest"
-          - name: "Windows"
-            runner: "windows-latest"
+          # Temporarily disable Windows here because GraalPy doesn't support it yet.
+          # Windows can be reintegrated here when GraalPy supports Windows.
+          # - name: "Windows"
+          #   runner: "windows-latest"
       fail-fast: false
 
     runs-on: "${{ matrix.os.runner }}"
@@ -44,7 +46,8 @@ jobs:
       - uses: "actions/setup-python@v5"
         with:
           python-version: |
-            pypy3.10
+            graalpy-23.1
+            pypy-3.10
             3.11
 
       - uses: "kurtmckee/detect-pythons@v1"
@@ -77,3 +80,45 @@ jobs:
       - name: "Run the test suite against all installed Pythons"
         run: "${{ env.venv-path }}/tox"
       # END_README_EXAMPLE_BLOCK
+
+  duplicate-for-windows-without-graalpy:
+    # This duplicate exists solely to avoid testing GraalPy on Windows.
+    # It is anticipated that GraalPy will be available for Windows April 2024.
+    name: "Verify (Windows)"
+    runs-on: "windows-latest"
+    steps:
+      - uses: "actions/setup-python@v5"
+        with:
+          python-version: |
+            pypy-3.10
+            3.11
+
+      - uses: "kurtmckee/detect-pythons@v1"
+
+      - uses: "actions/cache@v3"
+        id: "restore-cache"
+        with:
+          # You may need to augment the list of files to hash.
+          # For example, you might add 'requirements/*.txt' or 'pyproject.toml'.
+          key: "${{ hashFiles('.python-identifiers') }}"
+          path: |
+            .tox/
+            .venv/
+
+      - name: "Identify .venv path"
+        shell: "bash"
+        run: "echo 'venv-path=.venv/${{ runner.os == 'Windows' && 'Scripts' || 'bin' }}' >> $GITHUB_ENV"
+
+      - name: "Create a virtual environment"
+        if: "steps.restore-cache.outputs.cache-hit == false"
+        run: |
+          python -m venv .venv
+          ${{ env.venv-path }}/python -m pip install --upgrade pip setuptools wheel
+
+          # You may need to customize what gets installed next.
+          # However, tox is able to run test suites against multiple Pythons,
+          # so it's a helpful tool for efficient testing.
+          ${{ env.venv-path }}/pip install tox
+
+      - name: "Run the test suite against all installed Pythons"
+        run: "${{ env.venv-path }}/tox"
