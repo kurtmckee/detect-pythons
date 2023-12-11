@@ -1,3 +1,8 @@
+# This file is a part of the detect-pythons project.
+# https://github.com/kurtmckee/detect-pythons
+# Copyright 2023 Kurt McKee <contactme@kurtmckee.org>
+# SPDX-License-Identifier: MIT
+
 import platform
 import sys
 import sysconfig
