@@ -51,7 +51,7 @@ and tox test environments stored in ``.tox/``.
         python-version: |
           graalpy-23.1
           pypy-3.10
-          3.11
+          3.12
 
     - uses: "kurtmckee/detect-pythons@v1"
 
