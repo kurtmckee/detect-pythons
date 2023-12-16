@@ -24,9 +24,4 @@ $result = (
     | Get-Unique
 ) -join ";"
 
-# Output path information.
-# This must be the final line because it will be automatically transformed to:
-#
-#     Write-Output "python-identifiers=$result" > "$env:GITHUB_OUTPUT"
-#
 Write-Output "python-identifiers=$result"

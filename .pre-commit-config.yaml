@@ -44,19 +44,10 @@ repos:
     rev: "2.7.3"
     hooks:
       - id: "editorconfig-checker"
-        # A small number of files contain YAML syntax indented with 2 spaces.
-        # The .editorconfig file will continue to require 4 spaces,
-        # but this pre-commit hook will ignore the specific files.
-        exclude: "README.rst|test_sync_detector_code.py"
-
-  - repo: "local"
-    hooks:
-      - id: "sync-identify-code"
-        name: "Synchronize 'identify.py' source code into 'detector.sh'"
-        language: "python"
-        entry: "python src/detect_pythons/sync_identify_code.py"
-        always_run: true
-        pass_filenames: false
+        # The README contain YAML samples indented with 2 spaces.
+        # The .editorconfig file requires 4 spaces for indentation,
+        # so this pre-commit hook will ignore the README.
+        exclude: "README.rst"
 
   - repo: "https://github.com/shellcheck-py/shellcheck-py"
     rev: "v0.9.0.6"
@@ -67,12 +58,6 @@ repos:
 
   - repo: "local"
     hooks:
-      - id: "sync-detector-code"
-        name: "Synchronize detector source code into 'action.yml'"
-        language: "python"
-        entry: "python src/detect_pythons/sync_detector_code.py"
-        always_run: true
-        pass_filenames: false
       - id: "sync-readme-example"
         name: "Synchronize a functional example into the README"
         language: "python"
