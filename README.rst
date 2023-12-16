@@ -1,7 +1,8 @@
-..  This file is a part of the detect-pythons project.
-..  https://github.com/kurtmckee/detect-pythons
-..  Copyright 2023 Kurt McKee <contactme@kurtmckee.org>
-..  SPDX-License-Identifier: MIT
+..
+    This file is a part of the detect-pythons project.
+    https://github.com/kurtmckee/detect-pythons
+    Copyright 2023 Kurt McKee <contactme@kurtmckee.org>
+    SPDX-License-Identifier: MIT
 
 Detect Python interpreters
 ##########################
@@ -13,23 +14,26 @@ Detect Python interpreters
 Purpose
 =======
 
-If you're caching Python virtual environments, or tox environments,
-or even build artifacts that depend on a particular Python version,
-you need robust cache busting to ensure that your caches are invalidated
-when a new Python version is released.
+If you're caching Python virtual environments to speed up your CI runs,
+you've likely encountered broken symlinks or missing libraries
+when a new Python patch version was released.
+This is particularly likely to happen
+when using tox to test multiple Python versions simultaneously.
 
 ``detect-pythons`` provides that much-needed cache busting.
 
 It detects all Python executables in every directory on the ``$PATH``
 and identifies:
 
-*   The Python interpreter (CPython, PyPy, or GraalPy)
-*   The Python version (like "3.12.0")
+*   The Python interpreter (like CPython, PyPy, or GraalPy)
+*   The Python version (like "3.12.1")
     or the Python ABI version (like "3.12")
 *   The target architecture (like "x64")
 
 In most cases, the path to the executable already contains this information
 so it's not necessary to run the Python interpreter to extract any info.
+That makes ``detect-pythons`` *fast*.
+
 There are some exceptions, however;
 these are covered in the "Implementation" section below.
 
@@ -42,14 +46,15 @@ when caching a Python virtual environment stored in ``.venv/``
 and tox test environments stored in ``.tox/``.
 
 
-..  START_EXAMPLE_YAML_BLOCK
+..  START_README_EXAMPLE_BLOCK
 ..  code-block:: yaml
 
-    - uses: "actions/setup-python@v4"
+    - uses: "actions/setup-python@v5"
       with:
         python-version: |
-          pypy3.10
-          3.11
+          graalpy-23.1
+          pypy-3.10
+          3.12
 
     - uses: "kurtmckee/detect-pythons@v1"
 
@@ -80,7 +85,7 @@ and tox test environments stored in ``.tox/``.
 
     - name: "Run the test suite against all installed Pythons"
       run: "${{ env.venv-path }}/tox"
-..  END_EXAMPLE_YAML_BLOCK
+..  END_README_EXAMPLE_BLOCK
 
 
 Inputs
@@ -120,9 +125,9 @@ This may be useful in other contexts.
 Implementation
 ==============
 
-The action tries to find all Python interpreters available on the ``$PATH``
-and ensure that critical information about each interpreter is included
-in the action output:
+``detect-pythons`` finds all Python interpreters available on the ``$PATH``
+and ensures that critical information about each interpreter is included
+in its output:
 
 *   Implementation
 *   Version
@@ -139,9 +144,9 @@ so the paths are used without executing the interpreters.
 ..  csv-table::
     :header: "Platform", "Sample path under ``$RUNNER_TOOL_CACHE``"
 
-    "Linux", "``/opt/hostedtoolcache/Python/3.11.6/x64/bin``"
+    "Linux", "``/opt/hostedtoolcache/Python/3.12.1/x64/bin``"
     "macOS", "``/Users/runner/hostedtoolcache/PyPy/3.10.13/x64/bin``"
-    "Windows", "``C:\hostedtoolcache\windows\Python\3.11.6\x64``"
+    "Windows", "``C:\hostedtoolcache\windows\Python\3.12.1\x64``"
 
 
 System CPython interpreters
@@ -162,14 +167,30 @@ This results in a value like the following:
     "macOS", "``.cpython-311-darwin.so``"
 
 
-...other
---------
+macOS runner variability
+------------------------
 
-At the time of writing, GitHub's current macOS runner has CPython 2.7 pre-installed
-and available on the ``$PATH``.
-It doesn't have an ``EXT_SUFFIX`` config value, so this action constructs one.
+At the time of writing, GitHub's macOS runners sometimes have CPython 2.7 pre-installed.
+CPython 2.7 doesn't have an ``EXT_SUFFIX`` config value,
+so ``detect-pythons`` constructs one.
 
 ..  csv-table::
     :header: "Platform", "Constructed ``EXT_SUFFIX`` equivalent"
 
-    "macOS", "``.cpython-27-darwin``"
+    "macOS 12.6", "``.cpython-27-darwin-x86_64``"
+
+Note that CPython 2.7 is only installed *sometimes*; sometimes it isn't.
+This is because ``macos-latest`` is sometimes macOS 12.6, and sometimes it's macOS 12.7.
+See `actions/runner-images#8642`_ for more information.
+
+When using ``detect-pythons`` to help with cache-busting,
+this variability means that you may see two caches appear in regular use
+for your macOS-based workflows;
+one that is valid when CPython 2.7 is pre-installed,
+and another that is valid when it *isn't* installed.
+
+
+..  Links
+..  -----
+..
+..  _actions/runner-images#8642: https://github.com/actions/runner-images/issues/8642

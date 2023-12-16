@@ -3,35 +3,7 @@
 # Copyright 2023 Kurt McKee <contactme@kurtmckee.org>
 # SPDX-License-Identifier: MIT
 
-# Do not modify the Python code below.
-# It is copied from 'identify.py' by a pre-commit hook.
-python_code=$(
-cat <<'identify.py_SOURCE_CODE'
-from __future__ import print_function
-
-import sysconfig
-
-
-def main():
-    ext_suffix = sysconfig.get_config_var("EXT_SUFFIX")
-    if ext_suffix is not None:
-        print(ext_suffix)
-    else:
-        # Python 2.7 on GitHub macOS runners
-        import platform
-
-        print(
-            "." + platform.python_implementation().lower(),
-            sysconfig.get_config_var("py_version_nodot"),
-            sysconfig.get_config_var("MACHDEP"),
-            sep="-",
-        )
-
-
-if __name__ == "__main__":
-    main()
-identify.py_SOURCE_CODE
-)
+IDENTIFY_PY="${GITHUB_ACTION_PATH}/src/detect_pythons/identify.py"
 
 # Search paths in $PATH for Python interpreters.
 IFS=: read -r -a all_paths <<< "$PATH"
@@ -59,7 +31,7 @@ for path in "${all_paths[@]}"; do
         # In such cases, it's necessary to run the executable to get something unique.
         if [[ -x "${path}/python" ]]; then
             paths+=("${path}")
-            paths+=("$(echo "${python_code}" | "${path}/python" -)")
+            paths+=("$("${path}/python" "${IDENTIFY_PY}")")
         fi
     fi
 done
@@ -76,9 +48,4 @@ result="$(
 # Trim trailing colons.
 result="${result%:}"
 
-# Output path information.
-# This must be the final line because it will be automatically transformed to:
-#
-#     echo "python-identifiers=${result}" > "$GITHUB_OUTPUT"
-#
 echo "python-identifiers=${result}"

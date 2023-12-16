@@ -1,7 +1,8 @@
-..  This file is a part of the detect-pythons project.
-..  https://github.com/kurtmckee/detect-pythons
-..  Copyright 2023 Kurt McKee <contactme@kurtmckee.org>
-..  SPDX-License-Identifier: MIT
+..
+    This file is a part of the detect-pythons project.
+    https://github.com/kurtmckee/detect-pythons
+    Copyright 2023 Kurt McKee <contactme@kurtmckee.org>
+    SPDX-License-Identifier: MIT
 
 ..
     STOP!
@@ -22,6 +23,33 @@ Please see the fragment files in the `changelog.d directory`_.
 ..  _changelog.d directory: https://github.com/kurtmckee/detect-pythons/tree/main/changelog.d
 
 ..  scriv-insert-here
+
+.. _changelog-1.1.0:
+
+1.1.0 - 2023-12-16
+==================
+
+Python support
+--------------
+
+*   Document that GraalPy is a supported interpreter, and test it.
+
+*   Locally test against early Python 3.13 versions.
+
+Changed
+-------
+
+*   ``None`` should no longer appear in the identifier
+    for Python interpreters missing an ``EXT_SUFFIX`` sysconfig value.
+
+*   Simplify how the action runs.
+
+    Previously, the underlying shell scripts were embedded directly into ``action.yml``.
+
+Documentation
+-------------
+
+*   Document current ``macos-latest`` runner variability.
 
 .. _changelog-1.0.0:
 
