@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "detect_pythons"
-version = "1.0.0"
+version = "1.1.0"
 description = "A GitHub action to detect installed Pythons. Suitable for cache-busting."
 authors = ["Kurt McKee <contactme@kurtmckee.org>"]
 license = "MIT"
