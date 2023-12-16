@@ -164,14 +164,28 @@ This results in a value like the following:
     "macOS", "``.cpython-311-darwin.so``"
 
 
-...other
---------
+macOS runner variability
+------------------------
 
-At the time of writing, GitHub's current macOS runner has CPython 2.7 pre-installed
-and available on the ``$PATH``.
-It doesn't have an ``EXT_SUFFIX`` config value, so this action constructs one.
+At the time of writing, GitHub's macOS runners sometimes have CPython 2.7 pre-installed.
+CPython 2.7 doesn't have an ``EXT_SUFFIX`` config value, so this action constructs one.
 
 ..  csv-table::
     :header: "Platform", "Constructed ``EXT_SUFFIX`` equivalent"
 
-    "macOS", "``.cpython-27-darwin-x86_64``"
+    "macOS 12.6", "``.cpython-27-darwin-x86_64``"
+
+Note that CPython 2.7 is only installed *sometimes*; sometimes it isn't.
+See `actions/runner-images#8642`_ for more information.
+
+When using this action to help with cache-busting,
+this variability means that you may see two caches appear in regular use
+for your macOS-based workflows;
+one that is valid when CPython 2.7 is pre-installed,
+and another that is valid when it *isn't* installed.
+
+
+..  Links
+..  -----
+..
+..  _actions/runner-images#8642: https://github.com/actions/runner-images/issues/8642
