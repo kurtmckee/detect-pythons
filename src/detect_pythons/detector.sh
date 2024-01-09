@@ -1,6 +1,6 @@
 # This file is a part of the detect-pythons project.
 # https://github.com/kurtmckee/detect-pythons
-# Copyright 2023 Kurt McKee <contactme@kurtmckee.org>
+# Copyright 2023-2024 Kurt McKee <contactme@kurtmckee.org>
 # SPDX-License-Identifier: MIT
 
 IDENTIFY_PY="${GITHUB_ACTION_PATH}/src/detect_pythons/identify.py"
