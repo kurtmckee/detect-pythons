@@ -20,6 +20,26 @@ jobs:
             runner: "macos-latest"
           - name: "Windows"
             runner: "windows-latest"
+
+        # Each operating system should test all Python interpreters simultaneously.
+        # This nested-list syntax accomplishes that goal
+        # without creating cross-products of every possible OS and interpreter.
+        #
+        # Note: The CPython interpreter versions should be in ascending order
+        # because the last-listed version will be the default CPython version.
+        #
+        cpythons:
+          - - "3.8"
+            - "3.9"
+            - "3.10"
+            - "3.11"
+            - "3.12"
+        cpython-beta:
+          - "3.13"
+        pypys:
+          - - "3.8"
+            - "3.9"
+            - "3.10"
       fail-fast: false
 
     runs-on: "${{ matrix.os.runner }}"
@@ -30,17 +50,15 @@ jobs:
       - name: "Setup Pythons"
         uses: "actions/setup-python@0a5c61591373683505ea898e09a3ea4f39ef2b9c" # v5.0.0
         with:
-          python-version: |
-            pypy3.8
-            pypy3.9
-            pypy3.10
-            3.8
-            3.9
-            3.10
-            3.11
-            3.12
+          python-version: "${{
+            format(
+              '{0}\n{1}\n{2}',
+              format('pypy{0}', join(matrix.pypys, '\npypy')),
+              matrix.cpython-beta,
+              join(matrix.cpythons, '\n')
+            )
+            }}"
           allow-prereleases: true
-          cache: "pip"
 
       - name: "Detect Pythons"
         uses: "./"
