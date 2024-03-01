@@ -58,7 +58,7 @@ and tox test environments stored in ``.tox/``.
 
     - uses: "kurtmckee/detect-pythons@v1"
 
-    - uses: "actions/cache@v3"
+    - uses: "actions/cache@v4"
       id: "restore-cache"
       with:
         # You may need to augment the list of files to hash.
