@@ -49,7 +49,7 @@ and tox test environments stored in ``.tox/``.
 ..  START_README_EXAMPLE_BLOCK
 ..  code-block:: yaml
 
-    - uses: "actions/setup-python@v5"
+    - uses: "actions/setup-python@v5.1.0"
       with:
         python-version: |
           graalpy-23.1
