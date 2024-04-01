@@ -43,7 +43,7 @@ jobs:
     runs-on: "${{ matrix.os.runner }}"
     steps:
       # START_README_EXAMPLE_BLOCK
-      - uses: "actions/setup-python@v5"
+      - uses: "actions/setup-python@v5.1.0"
         with:
           python-version: |
             graalpy-23.1
@@ -87,7 +87,7 @@ jobs:
     name: "Verify (Windows)"
     runs-on: "windows-latest"
     steps:
-      - uses: "actions/setup-python@v5"
+      - uses: "actions/setup-python@v5.1.0"
         with:
           python-version: |
             pypy-3.10
