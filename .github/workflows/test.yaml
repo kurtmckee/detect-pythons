@@ -8,18 +8,20 @@ on:
       - "releases"
 
 jobs:
-  tox:
-    name: "Tox (${{ matrix.os.name }})"
+  code:
+    name:
+      "Code (${{
+        (startswith(matrix.runner, 'ubuntu') && 'Linux')
+        || (startswith(matrix.runner, 'macos') && 'macOS')
+        || (startswith(matrix.runner, 'windows') && 'Windows')
+      }})"
 
     strategy:
       matrix:
-        os:
-          - name: "Linux"
-            runner: "ubuntu-latest"
-          - name: "macOS"
-            runner: "macos-latest"
-          - name: "Windows"
-            runner: "windows-latest"
+        runner:
+          - "ubuntu-latest"
+          - "macos-latest"
+          - "windows-latest"
 
         # Each operating system should test all Python interpreters simultaneously.
         # This nested-list syntax accomplishes that goal
@@ -42,49 +44,10 @@ jobs:
             - "3.10"
       fail-fast: false
 
-    runs-on: "${{ matrix.os.runner }}"
-    steps:
-      - name: "Checkout the repository"
-        uses: "actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b" # v4.1.4
+    uses: "kurtmckee/github-workflows/.github/workflows/tox.yaml@73024397dba10c866931a1d26cc2a0e7d223472f" # v0.2
+    with:
+      config: "${{ toJSON(matrix) }}"
 
-      - name: "Setup Pythons"
-        uses: "actions/setup-python@82c7e631bb3cdc910f68e0081d67478d79c6982d" # v5.1.0
-        with:
-          python-version: "${{
-            format(
-              '{0}\n{1}\n{2}',
-              format('pypy{0}', join(matrix.pypys, '\npypy')),
-              matrix.cpython-beta,
-              join(matrix.cpythons, '\n')
-            )
-            }}"
-          allow-prereleases: true
-
-      - name: "Detect Pythons"
-        uses: "./"
-
-      - name: "Restore cache"
-        id: "restore-cache"
-        uses: "actions/cache@ab5e6d0c87105b4c9c2047343972218f562e4319" # v4.0.1
-        with:
-          path: |
-            .tox/
-            .venv
-          key: "tox-os=${{ matrix.os.runner }}-hash=${{ hashFiles('.python-identifiers', 'tox.ini') }}"
-
-      - name: "Identify .venv path"
-        shell: "bash"
-        run: "echo 'venv-path=.venv/${{ runner.os == 'Windows' && 'Scripts' || 'bin' }}' >> $GITHUB_ENV"
-
-      - name: "Create a virtual environment"
-        if: "steps.restore-cache.outputs.cache-hit == false"
-        run: |
-          python -m venv .venv
-          ${{ env.venv-path }}/python -m pip install --upgrade pip setuptools wheel
-          ${{ env.venv-path }}/pip install tox
-
-      - name: "Run the test suite"
-        run: "${{ env.venv-path }}/tox"
 
   inputs:
     name: "Inputs (${{ matrix.os.name }})"
