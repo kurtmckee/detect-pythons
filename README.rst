@@ -70,7 +70,8 @@ and tox test environments stored in ``.tox/``.
 
     - name: "Identify .venv path"
       shell: "bash"
-      run: "echo 'venv-path=.venv/${{ runner.os == 'Windows' && 'Scripts' || 'bin' }}' >> $GITHUB_ENV"
+      run: |
+        echo 'venv-path=.venv/${{ runner.os == 'Windows' && 'Scripts' || 'bin' }}' >> "$GITHUB_ENV"
 
     - name: "Create a virtual environment"
       if: "steps.restore-cache.outputs.cache-hit == false"
