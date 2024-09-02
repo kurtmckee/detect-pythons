@@ -41,7 +41,7 @@ repos:
           - "flake8-bugbear==24.8.19"
 
   - repo: "https://github.com/editorconfig-checker/editorconfig-checker.python"
-    rev: "2.7.3"
+    rev: "3.0.3"
     hooks:
       - id: "editorconfig-checker"
         # The README contains YAML samples indented with 2 spaces.
@@ -66,7 +66,7 @@ repos:
         pass_filenames: false
 
   - repo: "https://github.com/python-jsonschema/check-jsonschema"
-    rev: "0.29.1"
+    rev: "0.29.2"
     hooks:
       - id: "check-github-workflows"
       - id: "check-dependabot"
