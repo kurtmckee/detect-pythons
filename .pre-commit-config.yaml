@@ -80,6 +80,6 @@ repos:
       - id: "check-dependabot"
 
   - repo: "https://github.com/rhysd/actionlint"
-    rev: "v1.7.3"
+    rev: "v1.7.4"
     hooks:
       - id: "actionlint"
