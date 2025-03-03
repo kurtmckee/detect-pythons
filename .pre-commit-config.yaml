@@ -27,7 +27,7 @@ repos:
       - id: "update-headers"
 
   - repo: "https://github.com/sirosen/slyp"
-    rev: 0.8.1
+    rev: 0.8.2
     hooks:
       - id: "slyp"
 
@@ -37,12 +37,12 @@ repos:
       - id: "black"
 
   - repo: "https://github.com/pycqa/isort"
-    rev: "6.0.0"
+    rev: "6.0.1"
     hooks:
       - id: "isort"
 
   - repo: "https://github.com/pycqa/flake8"
-    rev: "7.1.1"
+    rev: "7.1.2"
     hooks:
       - id: "flake8"
         additional_dependencies:
@@ -74,7 +74,7 @@ repos:
         pass_filenames: false
 
   - repo: "https://github.com/python-jsonschema/check-jsonschema"
-    rev: "0.31.1"
+    rev: "0.31.2"
     hooks:
       - id: "check-github-workflows"
       - id: "check-dependabot"
