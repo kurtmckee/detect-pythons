@@ -1,20 +1,35 @@
-[tool.poetry]
+[project]
 name = "detect_pythons"
-version = "1.1.0"
+version = "1.1.1"
 description = "A GitHub action to detect installed Pythons. Suitable for cache-busting."
-authors = ["Kurt McKee <contactme@kurtmckee.org>"]
+authors = [{ name = "Kurt McKee", email = "contactme@kurtmckee.org" }]
 license = "MIT"
 readme = "README.rst"
-
-
-[tool.poetry.dependencies]
-python = ">=3.8"
-
+requires-python = ">=3.8"
+classifiers = ["Private :: Do not Upload"]
 
 [build-system]
-requires = ["poetry-core"]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
 build-backend = "poetry.core.masonry.api"
 
+
+# chipshot
+# --------
+
+[tool.chipshot]
+template = """
+This file is a part of the detect-pythons project.
+https://github.com/kurtmckee/detect-pythons
+Copyright 2023-{{ year }} Kurt McKee <contactme@kurtmckee.org>
+SPDX-License-Identifier: MIT
+"""
+exclusions = [
+    "changelog.d/",
+]
+
+
+# coverage
+# --------
 
 [tool.coverage.run]
 parallel = true
@@ -24,27 +39,30 @@ source = [
     "tests",
 ]
 
-
 [tool.coverage.paths]
 source = [
     "src",
     "*/site-packages",
 ]
 
-
 [tool.coverage.report]
 skip_covered = true
 fail_under = 100
-
 
 [tool.coverage.html]
 skip_covered = false
 directory = "htmlcov/"
 
 
+# isort
+# -----
+
 [tool.isort]
 profile = "black"
 
+
+# pytest
+# ------
 
 [tool.pytest.ini_options]
 addopts = "--color=yes"
@@ -53,8 +71,11 @@ filterwarnings = [
 ]
 
 
+# scriv
+# -----
+
 [tool.scriv]
-version = "literal: pyproject.toml: tool.poetry.version"
+version = "literal: pyproject.toml: project.version"
 categories = [
     "Python support",
     "Added",
@@ -70,15 +91,3 @@ fragment_directory = "changelog.d"
 insert_marker = "scriv-insert-here"
 main_branches = ["main", "releases"]
 new_fragment_template = "file: fragment-template.rst.txt"
-
-
-[tool.chipshot]
-template = """
-This file is a part of the detect-pythons project.
-https://github.com/kurtmckee/detect-pythons
-Copyright 2023 Kurt McKee <contactme@kurtmckee.org>
-SPDX-License-Identifier: MIT
-"""
-exclusions = [
-    "changelog.d/",
-]

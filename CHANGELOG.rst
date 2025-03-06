@@ -1,7 +1,7 @@
 ..
     This file is a part of the detect-pythons project.
     https://github.com/kurtmckee/detect-pythons
-    Copyright 2023 Kurt McKee <contactme@kurtmckee.org>
+    Copyright 2023-2025 Kurt McKee <contactme@kurtmckee.org>
     SPDX-License-Identifier: MIT
 
 ..
@@ -23,6 +23,23 @@ Please see the fragment files in the `changelog.d directory`_.
 ..  _changelog.d directory: https://github.com/kurtmckee/detect-pythons/tree/main/changelog.d
 
 ..  scriv-insert-here
+
+.. _changelog-1.1.1:
+
+1.1.1 - 2025-03-06
+==================
+
+Python support
+--------------
+
+*   Support CPython 3.13 and PyPy 3.11.
+*   Test against early versions of Python 3.14.
+
+Development
+-----------
+
+*   Migrate to PEP 621 project metadata.
+*   Migrate to a reusable CI workflow.
 
 .. _changelog-1.1.0:
 

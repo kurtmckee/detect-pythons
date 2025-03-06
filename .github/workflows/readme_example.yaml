@@ -1,6 +1,6 @@
 # This file is a part of the detect-pythons project.
 # https://github.com/kurtmckee/detect-pythons
-# Copyright 2023 Kurt McKee <contactme@kurtmckee.org>
+# Copyright 2023-2025 Kurt McKee <contactme@kurtmckee.org>
 # SPDX-License-Identifier: MIT
 
 # This workflow exists for several purposes:
@@ -46,13 +46,13 @@ jobs:
       - uses: "actions/setup-python@v5"
         with:
           python-version: |
-            graalpy-23.1
-            pypy-3.10
-            3.12
+            graalpy-24
+            pypy-3.11
+            3.13
 
       - uses: "kurtmckee/detect-pythons@v1"
 
-      - uses: "actions/cache@v3"
+      - uses: "actions/cache@v4"
         id: "restore-cache"
         with:
           # You may need to augment the list of files to hash.
@@ -64,7 +64,8 @@ jobs:
 
       - name: "Identify .venv path"
         shell: "bash"
-        run: "echo 'venv-path=.venv/${{ runner.os == 'Windows' && 'Scripts' || 'bin' }}' >> $GITHUB_ENV"
+        run: |
+          echo 'venv-path=.venv/${{ runner.os == 'Windows' && 'Scripts' || 'bin' }}' >> "$GITHUB_ENV"
 
       - name: "Create a virtual environment"
         if: "steps.restore-cache.outputs.cache-hit == false"
@@ -95,7 +96,7 @@ jobs:
 
       - uses: "kurtmckee/detect-pythons@v1"
 
-      - uses: "actions/cache@v3"
+      - uses: "actions/cache@v4"
         id: "restore-cache"
         with:
           # You may need to augment the list of files to hash.
@@ -107,7 +108,8 @@ jobs:
 
       - name: "Identify .venv path"
         shell: "bash"
-        run: "echo 'venv-path=.venv/${{ runner.os == 'Windows' && 'Scripts' || 'bin' }}' >> $GITHUB_ENV"
+        run: |
+          echo 'venv-path=.venv/${{ runner.os == 'Windows' && 'Scripts' || 'bin' }}' >> "$GITHUB_ENV"
 
       - name: "Create a virtual environment"
         if: "steps.restore-cache.outputs.cache-hit == false"

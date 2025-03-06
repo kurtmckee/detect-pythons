@@ -1,7 +1,7 @@
 ..
     This file is a part of the detect-pythons project.
     https://github.com/kurtmckee/detect-pythons
-    Copyright 2023 Kurt McKee <contactme@kurtmckee.org>
+    Copyright 2023-2025 Kurt McKee <contactme@kurtmckee.org>
     SPDX-License-Identifier: MIT
 
 Detect Python interpreters
@@ -52,13 +52,13 @@ and tox test environments stored in ``.tox/``.
     - uses: "actions/setup-python@v5"
       with:
         python-version: |
-          graalpy-23.1
-          pypy-3.10
-          3.12
+          graalpy-24
+          pypy-3.11
+          3.13
 
     - uses: "kurtmckee/detect-pythons@v1"
 
-    - uses: "actions/cache@v3"
+    - uses: "actions/cache@v4"
       id: "restore-cache"
       with:
         # You may need to augment the list of files to hash.
@@ -70,7 +70,8 @@ and tox test environments stored in ``.tox/``.
 
     - name: "Identify .venv path"
       shell: "bash"
-      run: "echo 'venv-path=.venv/${{ runner.os == 'Windows' && 'Scripts' || 'bin' }}' >> $GITHUB_ENV"
+      run: |
+        echo 'venv-path=.venv/${{ runner.os == 'Windows' && 'Scripts' || 'bin' }}' >> "$GITHUB_ENV"
 
     - name: "Create a virtual environment"
       if: "steps.restore-cache.outputs.cache-hit == false"
@@ -153,8 +154,8 @@ System CPython interpreters
 ---------------------------
 
 GitHub's Linux and macOS runners have system CPython interpreters installed.
-These are available at paths like ``/usr/bin/python``,
-which contains no useful information.
+These are available at paths which contain no useful information,
+like ``/usr/bin/python``.
 
 For these interpreters, the interpreter is executed
 and the value of ``sysconfig.get_config_var("EXT_SUFFIX")`` is extracted.
@@ -166,31 +167,11 @@ This results in a value like the following:
     "Linux", "``.cpython-310-x86_64-linux-gnu.so``"
     "macOS", "``.cpython-311-darwin.so``"
 
-
-macOS runner variability
-------------------------
-
-At the time of writing, GitHub's macOS runners sometimes have CPython 2.7 pre-installed.
-CPython 2.7 doesn't have an ``EXT_SUFFIX`` config value,
-so ``detect-pythons`` constructs one.
+Extremely old Python versions might not have an ``EXT_SUFFIX`` value.
+For example, CPython 2.7 doesn't have this value.
+If this is detected then an equivalent value is constructed.
 
 ..  csv-table::
     :header: "Platform", "Constructed ``EXT_SUFFIX`` equivalent"
 
-    "macOS 12.6", "``.cpython-27-darwin-x86_64``"
-
-Note that CPython 2.7 is only installed *sometimes*; sometimes it isn't.
-This is because ``macos-latest`` is sometimes macOS 12.6, and sometimes it's macOS 12.7.
-See `actions/runner-images#8642`_ for more information.
-
-When using ``detect-pythons`` to help with cache-busting,
-this variability means that you may see two caches appear in regular use
-for your macOS-based workflows;
-one that is valid when CPython 2.7 is pre-installed,
-and another that is valid when it *isn't* installed.
-
-
-..  Links
-..  -----
-..
-..  _actions/runner-images#8642: https://github.com/actions/runner-images/issues/8642
+    "macOS", "``.cpython-27-darwin-x86_64``"

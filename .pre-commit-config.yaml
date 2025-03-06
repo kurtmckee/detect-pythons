@@ -1,6 +1,9 @@
 ci:
   autoupdate_schedule: "monthly"
 
+default_language_version:
+  python: "python3.13"
+
 repos:
   - repo: "meta"
     hooks:
@@ -8,7 +11,7 @@ repos:
       - id: "check-useless-excludes"
 
   - repo: "https://github.com/pre-commit/pre-commit-hooks"
-    rev: "v4.5.0"
+    rev: "v5.0.0"
     hooks:
       - id: "check-yaml"
       - id: "check-added-large-files"
@@ -23,34 +26,39 @@ repos:
     hooks:
       - id: "update-headers"
 
+  - repo: "https://github.com/sirosen/slyp"
+    rev: 0.8.2
+    hooks:
+      - id: "slyp"
+
   - repo: "https://github.com/psf/black-pre-commit-mirror"
-    rev: "23.12.0"
+    rev: "25.1.0"
     hooks:
       - id: "black"
 
   - repo: "https://github.com/pycqa/isort"
-    rev: "5.13.2"
+    rev: "6.0.1"
     hooks:
       - id: "isort"
 
   - repo: "https://github.com/pycqa/flake8"
-    rev: "6.1.0"
+    rev: "7.1.2"
     hooks:
       - id: "flake8"
         additional_dependencies:
-          - "flake8-bugbear==23.12.2"
+          - "flake8-bugbear==24.12.12"
 
-  - repo: "https://github.com/editorconfig-checker/editorconfig-checker.python"
-    rev: "2.7.3"
+  - repo: "https://github.com/editorconfig-checker/editorconfig-checker"
+    rev: "v3.2.0"
     hooks:
       - id: "editorconfig-checker"
-        # The README contain YAML samples indented with 2 spaces.
+        # The README contains YAML samples indented with 2 spaces.
         # The .editorconfig file requires 4 spaces for indentation,
         # so this pre-commit hook will ignore the README.
         exclude: "README.rst"
 
   - repo: "https://github.com/shellcheck-py/shellcheck-py"
-    rev: "v0.9.0.6"
+    rev: "v0.10.0.1"
     hooks:
       - id: "shellcheck"
         args:
@@ -66,7 +74,12 @@ repos:
         pass_filenames: false
 
   - repo: "https://github.com/python-jsonschema/check-jsonschema"
-    rev: "0.27.3"
+    rev: "0.31.2"
     hooks:
       - id: "check-github-workflows"
       - id: "check-dependabot"
+
+  - repo: "https://github.com/rhysd/actionlint"
+    rev: "v1.7.7"
+    hooks:
+      - id: "actionlint"
