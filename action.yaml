@@ -6,11 +6,11 @@
 author: "Kurt McKee"
 name: "Detect installed Python interpreters"
 description: |
-  Detect installed Python interpreters and output them as "python-identifiers".
-  This can be useful for cache busting of tox, virtual environments,
-  and other items that are sensitive to changes in Python implementations and versions.
-
-  Only Python interpreters named "python" in the $PATH will be found.
+  Generate a robust cache-busting key based on
+  installed Python interpreters, versions, and target architectures.
+branding:
+  icon: "archive"
+  color: "green"
 
 inputs:
   identifiers-filename:
