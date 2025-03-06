@@ -1,21 +1,16 @@
-[build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
-
-
-# poetry
-# ------
-
-[tool.poetry]
+[project]
 name = "detect_pythons"
 version = "1.1.0"
 description = "A GitHub action to detect installed Pythons. Suitable for cache-busting."
-authors = ["Kurt McKee <contactme@kurtmckee.org>"]
+authors = [{ name = "Kurt McKee", email = "contactme@kurtmckee.org" }]
 license = "MIT"
 readme = "README.rst"
+requires-python = ">=3.8"
+classifiers = ["Private :: Do not Upload"]
 
-[tool.poetry.dependencies]
-python = ">=3.8"
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
 
 
 # chipshot
