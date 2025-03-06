@@ -1,6 +1,6 @@
 # This file is a part of the detect-pythons project.
 # https://github.com/kurtmckee/detect-pythons
-# Copyright 2023-2024 Kurt McKee <contactme@kurtmckee.org>
+# Copyright 2023-2025 Kurt McKee <contactme@kurtmckee.org>
 # SPDX-License-Identifier: MIT
 
 # This workflow exists for several purposes:
@@ -47,8 +47,8 @@ jobs:
         with:
           python-version: |
             graalpy-24
-            pypy-3.10
-            3.12
+            pypy-3.11
+            3.13
 
       - uses: "kurtmckee/detect-pythons@v1"
 
