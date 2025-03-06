@@ -24,6 +24,23 @@ Please see the fragment files in the `changelog.d directory`_.
 
 ..  scriv-insert-here
 
+.. _changelog-1.1.1:
+
+1.1.1 - 2025-03-06
+==================
+
+Python support
+--------------
+
+*   Support CPython 3.13 and PyPy 3.11.
+*   Test against early versions of Python 3.14.
+
+Development
+-----------
+
+*   Migrate to PEP 621 project metadata.
+*   Migrate to a reusable CI workflow.
+
 .. _changelog-1.1.0:
 
 1.1.0 - 2023-12-16
