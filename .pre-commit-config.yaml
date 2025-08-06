@@ -42,14 +42,15 @@ repos:
       - id: "isort"
 
   - repo: "https://github.com/pycqa/flake8"
-    rev: "7.2.0"
+    rev: "7.3.0"
     hooks:
       - id: "flake8"
         additional_dependencies:
+          - "flake8-toml-config==1.0.0"
           - "flake8-bugbear==24.12.12"
 
   - repo: "https://github.com/editorconfig-checker/editorconfig-checker"
-    rev: "v3.2.1"
+    rev: "v3.3.0"
     hooks:
       - id: "editorconfig-checker"
         # The README contains YAML samples indented with 2 spaces.
@@ -74,7 +75,7 @@ repos:
         pass_filenames: false
 
   - repo: "https://github.com/python-jsonschema/check-jsonschema"
-    rev: "0.33.0"
+    rev: "0.33.2"
     hooks:
       - id: "check-github-workflows"
       - id: "check-dependabot"
