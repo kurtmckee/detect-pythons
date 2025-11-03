@@ -37,7 +37,7 @@ repos:
       - id: "black"
 
   - repo: "https://github.com/pycqa/isort"
-    rev: "6.1.0"
+    rev: "7.0.0"
     hooks:
       - id: "isort"
 
@@ -50,7 +50,7 @@ repos:
           - "flake8-bugbear==24.12.12"
 
   - repo: "https://github.com/editorconfig-checker/editorconfig-checker"
-    rev: "v3.4.0"
+    rev: "v3.4.1"
     hooks:
       - id: "editorconfig-checker"
         # The README contains YAML samples indented with 2 spaces.
@@ -75,12 +75,12 @@ repos:
         pass_filenames: false
 
   - repo: "https://github.com/python-jsonschema/check-jsonschema"
-    rev: "0.34.0"
+    rev: "0.34.1"
     hooks:
       - id: "check-github-workflows"
       - id: "check-dependabot"
 
   - repo: "https://github.com/rhysd/actionlint"
-    rev: "v1.7.7"
+    rev: "v1.7.8"
     hooks:
       - id: "actionlint"
