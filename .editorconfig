@@ -10,3 +10,6 @@ trim_trailing_whitespace = true
 
 [{*.yaml,*.yml}]
 indent_size = 2
+
+[/README.rst]
+indent_size = unset
