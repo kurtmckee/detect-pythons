@@ -73,8 +73,10 @@ profile = "black"
 # pytest
 # ------
 
-[tool.pytest.ini_options]
-addopts = "--color=yes"
+[tool.pytest]
+addopts = [
+    "--color=yes",
+]
 filterwarnings = [
     "error",
 ]
