@@ -52,9 +52,9 @@ and tox test environments stored in ``.tox/``.
     - uses: "actions/setup-python@v6"
       with:
         python-version: |
-          graalpy-24
+          graalpy-25
           pypy-3.11
-          3.13
+          3.14
 
     - uses: "kurtmckee/detect-pythons@v1"
 
