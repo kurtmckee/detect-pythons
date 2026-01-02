@@ -27,6 +27,9 @@ exclusions = [
     "changelog.d/",
 ]
 
+[tool.chipshot.extensions.yaml]
+style = "hash"
+
 
 # coverage
 # --------
