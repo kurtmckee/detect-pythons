@@ -44,7 +44,7 @@ jobs:
               - "3.10"
               - "3.11"
 
-    uses: "kurtmckee/github-workflows/.github/workflows/tox.yaml@19c3c069be51d3bfc3ac73e85e81b2b1646e91a8" # v1.7
+    uses: "kurtmckee/github-workflows/.github/workflows/tox.yaml@598fc01db95578db9417cde9338ae7e7d891e66b" # v2.1
     with:
       config: "${{ toJSON(matrix) }}"
 
@@ -66,7 +66,7 @@ jobs:
     runs-on: "${{ matrix.os.runner }}"
     steps:
       - name: "Checkout the repository"
-        uses: "actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd" # v6.0.2
+        uses: "actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10" # v6.0.3
 
       - name: "Test: Disable output file"
         uses: "./"

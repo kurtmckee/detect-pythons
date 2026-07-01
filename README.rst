@@ -49,7 +49,7 @@ and tox test environments stored in ``.tox/``.
 ..  START_README_EXAMPLE_BLOCK
 ..  code-block:: yaml
 
-    - uses: "actions/setup-python@v6"
+    - uses: "actions/setup-python@v6.2.0"
       with:
         python-version: |
           graalpy-25
@@ -58,7 +58,7 @@ and tox test environments stored in ``.tox/``.
 
     - uses: "kurtmckee/detect-pythons@v1"
 
-    - uses: "actions/cache@v5"
+    - uses: "actions/cache@v5.0.5"
       id: "restore-cache"
       with:
         # You may need to augment the list of files to hash.
